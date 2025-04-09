@@ -1,0 +1,35 @@
+<!-- core/templates/question_detail.html -->
+{% extends 'base.html' %}
+{% block content %}
+    <h2>{{ question.title }}</h2>
+    <p><strong>Asked by:</strong> {{ question.user.username }} on {{ question.created_at }}</p>
+    <p>{{ question.description }}</p>
+
+    <hr>
+    <h3>Answers</h3>
+    {% for answer in question.answers.all %}
+        <div>
+            <p>{{ answer.content }}</p>
+            <p>— {{ answer.user.username }} | {{ answer.created_at }}</p>
+            <p>
+                <a href="{% url 'like_answer' answer.id %}">
+                    {% if user in answer.likes.all %}
+                        ❤️ Liked
+                    {% else %}
+                        🤍 Like
+                    {% endif %}
+                </a> ({{ answer.like_count }})
+            </p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No answers yet.</p>
+    {% endfor %}
+
+    <h3>Your Answer</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Answer</button>
+    </form>
+{% endblock %}
