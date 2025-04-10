@@ -1,35 +1,60 @@
 <!-- core/templates/question_detail.html -->
+
 {% extends 'base.html' %}
+
 {% block content %}
-    <h2>{{ question.title }}</h2>
-    <p><strong>Asked by:</strong> {{ question.user.username }} on {{ question.created_at }}</p>
-    <p>{{ question.description }}</p>
+<div class="max-w-4xl mx-auto mt-8 px-4">
+    <!-- Question Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 class="text-2xl font-bold text-blue-600 mb-2">{{ question.title }}</h2>
+        <p class="text-sm text-gray-500 mb-4">
+            <strong>Asked by:</strong> {{ question.user.username }} on {{ question.created_at|date:"F j, Y, g:i a" }}
+        </p>
+        <p class="text-gray-800">{{ question.description }}</p>
+    </div>
 
-    <hr>
-    <h3>Answers</h3>
-    {% for answer in question.answers.all %}
-        <div>
-            <p>{{ answer.content }}</p>
-            <p>— {{ answer.user.username }} | {{ answer.created_at }}</p>
-            <p>
-                <a href="{% url 'like_answer' answer.id %}">
-                    {% if user in answer.likes.all %}
-                        ❤️ Liked
-                    {% else %}
-                        🤍 Like
+    <!-- Answers Section -->
+    <div class="mb-10">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Answers</h3>
+        {% for answer in question.answers.all %}
+            <div class="bg-gray-100 p-4 rounded-md mb-4 border border-gray-200">
+                <p class="text-gray-800 mb-2">{{ answer.content }}</p>
+                <div class="flex justify-between items-center text-sm text-gray-600">
+                    <span>— {{ answer.user.username }} | {{ answer.created_at|date:"F j, Y, g:i a" }}</span>
+                    <span>
+                        <a href="{% url 'like_answer' answer.id %}" class="hover:text-red-500 transition">
+                            {% if user in answer.likes.all %}
+                                ❤️ Liked
+                            {% else %}
+                                🤍 Like
+                            {% endif %}
+                        </a> ({{ answer.like_count }})
+                    </span>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-gray-500">No answers yet.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Your Answer Form -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Your Answer</h3>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block mb-1 text-sm font-medium text-gray-700">{{ field.label_tag }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
                     {% endif %}
-                </a> ({{ answer.like_count }})
-            </p>
-        </div>
-        <hr>
-    {% empty %}
-        <p>No answers yet.</p>
-    {% endfor %}
-
-    <h3>Your Answer</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Post Answer</button>
-    </form>
+                </div>
+            {% endfor %}
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                Post Answer
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock %}

@@ -53,8 +53,9 @@ def question_detail(request, question_id):
 @login_required
 def like_answer(request, answer_id):
     answer = get_object_or_404(Answer, pk=answer_id)
-    if request.user in answer.likes.all():
-        answer.likes.remove(request.user)
-    else:
-        answer.likes.add(request.user)
+    if request.user != answer.user:  # prevent liking your own answer
+        if request.user in answer.likes.all():
+            answer.likes.remove(request.user)
+        else:
+            answer.likes.add(request.user)
     return redirect('question_detail', question_id=answer.question.id)

@@ -56,7 +56,6 @@ ROOT_URLCONF = 'quora_clone.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [],
         'DIRS': [os.path.join(BASE_DIR, 'core/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -76,19 +75,12 @@ WSGI_APPLICATION = 'quora_clone.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',          # Database name
         'USER': 'postgres',          # Username
-        'PASSWORD': 'Payal1208',     # Password
+        'PASSWORD': '',     # Password
         'HOST': 'localhost',         # Host
         'PORT': '5432',              # Port
         'OPTIONS': {
